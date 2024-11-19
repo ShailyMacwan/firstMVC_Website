@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+        
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-dark sticky-top position-fixed px-3 py-0 ">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+       
+                <div class="gap-4 d-flex flex-row p-2 m-2"  style="font-size:20px">
+                    <div>
+                        <a href="/Home/Register" class="nav-item nav-link text-danger">Sign Up</a>
+                    </div>
+                    <div>
+                        <a href="/Home/Login"  class="nav-item nav-link text-danger ">Login</a>
+                    </div>
+                </div>
+               
+
+
+            </nav>
+
+                @RenderBody()
+
+</body>
+</html>
