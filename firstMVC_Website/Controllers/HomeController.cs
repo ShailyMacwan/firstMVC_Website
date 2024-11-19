@@ -13,6 +13,7 @@ namespace firstMVC_Website.Controllers
     public class HomeController : Controller
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ConnectionString);
+
         public ActionResult Index()
         {
             var name = Session["name"] as string;
@@ -54,7 +55,6 @@ namespace firstMVC_Website.Controllers
             cmd.ExecuteNonQuery();
 
             con.Close();
-
             Console.WriteLine("Registered");
             //return View();
             return RedirectToAction("Login", "Home");
