@@ -42,7 +42,7 @@
                     <i class="fa fa-chart-line fa-3x text-danger"></i>
                     <div class="ms-3">
                         <p class="mb-2" style="color: #6C7293">Today Sale</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <h6 class="mb-0" id="todaySale">@ViewBag.SalesData[0]</h6>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     <i class="fa fa-chart-bar fa-3x text-danger"></i>
                     <div class="ms-3">
                         <p class="mb-2" style="color: #6C7293">Total Sale</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <h6 class="mb-0" id="totalSale"></h6>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     <i class="fa fa-chart-area fa-3x text-danger"></i>
                     <div class="ms-3">
                         <p class="mb-2" style="color: #6C7293">Today Revenue</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <h6 class="mb-0" id="todayRevenue">@ViewBag.RevenueData[0]</h6>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                     <i class="fa fa-chart-pie fa-3x text-danger"></i>
                     <div class="ms-3">
                         <p class="mb-2" style="color: #6C7293">Total Revenue</p>
-                        <h6 class="mb-0">$1234</h6>
+                        <h6 class="mb-0" id="totalRevenue">$1234</h6>
                     </div>
                 </div>
             </div>
@@ -115,47 +115,86 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
    
-    <script>
-        var ctx = document.getElementById('worldwide-sales').getContext('2d');
-        var worldwideSalesChart = new Chart(ctx, {
-            type: 'bar', // or any other chart type
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                datasets: [{
-                    label: 'Sales',
-                    data: [100, 200, 300, 400, 500],
-                    backgroundColor: 'rgba(235, 22, 22, .5)',
-                    borderColor: 'rgba(255, 99, 132, 0.2)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true
+<script>
+    // Get data from ViewBag
+    var months = @Html.Raw(Json.Encode(ViewBag.Months));
+    var salesData = @Html.Raw(Json.Encode(ViewBag.SalesData1));
+
+    // Chart configuration
+    var ctx = document.getElementById('worldwide-sales').getContext('2d');
+    var worldwideSalesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months, // Dynamic months
+            datasets: [{
+                label: 'Sales',
+                data: salesData, // Dynamic sales data
+                backgroundColor: 'rgba(235, 22, 22, 0.5)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        });
-        var ctx2 = $("#salse-revenue").get(0).getContext("2d");
+        }
+    });
+</script>
+
+    <script>
+      var  years = @Html.Raw(Json.Encode(ViewBag.years));
+       var salesData = @Html.Raw(Json.Encode(ViewBag.salesData));
+        var revenueData = @Html.Raw(Json.Encode(ViewBag.revenueData));
+
+        var totalSales = salesData.reduce((a, b) => a + b);
+        document.getElementById("totalSale").innerHTML = totalSales;
+
+        var totalRevenue = revenueData.reduce((a, b) => a + b);
+        document.getElementById("totalRevenue").innerHTML = totalRevenue;
+       
+
+        console.log("Year :", salesData);
+
+        var ctx2 = document.getElementById("salse-revenue").getContext("2d");
         var myChart2 = new Chart(ctx2, {
             type: "line",
             data: {
-                labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
-                datasets: [{
-                    label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
-                    backgroundColor: "rgba(235, 22, 22, .7)",
-                    fill: true
-                },
-                {
-                    label: "Revenue",
-                    data: [99, 135, 170, 130, 190, 180, 270],
-                    backgroundColor: "rgba(235, 22, 22, .5)",
-                    fill: true
-                }
+                labels: years, // Dynamic years
+                datasets: [
+                    {
+                        label: "Sales",
+                        data: salesData, // Dynamic sales data
+                        backgroundColor: "rgba(235, 22, 22, .7)",
+                        fill: true
+                    },
+                    {
+                        label: "Revenue",
+                        data: revenueData, // Dynamic revenue data
+                        backgroundColor: "rgba(235, 22, 22, .5)",
+                        fill: true
+                    }
                 ]
             },
             options: {
-                responsive: true
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ": $" + tooltipItem.raw.toLocaleString();
+                            }
+                        }
+                    }
+                }
             }
         });
+
     </script>
 
 </body>
